@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="kevin.sewell" id="subdistrict-1">
+        <createTable tableName="sub_district">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="external_id" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="coordinates" type="LONGTEXT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="short_name" type="VARCHAR(255)"/>
+            <column name="district" type="BIGINT"/>
+        </createTable>
+
+        <sqlFile path="subdistrict.sql" relativeToChangelogFile="true"/>
+
+        <insert tableName="hibernate_sequences">
+            <column name="sequence_name">sub_district</column>
+            <column name="sequence_next_hi_value">1</column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

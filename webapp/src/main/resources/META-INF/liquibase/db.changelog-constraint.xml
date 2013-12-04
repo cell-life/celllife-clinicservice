@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="kevin.sewell" id="constraint-1">
+        <addForeignKeyConstraint baseColumnNames="sub_district"
+                                 baseTableName="clinic"
+                                 constraintName="FKAF1314E89F252210"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sub_district"/>
+    </changeSet>
+
+    <changeSet author="kevin.sewell" id="constraint-2">
+        <addForeignKeyConstraint baseColumnNames="province"
+                                 baseTableName="district"
+                                 constraintName="FK1139338E45C054F3"
+                                 referencedColumnNames="id"
+                                 referencedTableName="province"/>
+    </changeSet>
+
+    <changeSet author="kevin.sewell" id="constraint-3">
+        <addForeignKeyConstraint baseColumnNames="district"
+                                 baseTableName="sub_district"
+                                 constraintName="FK1C0EAEAD57F5E711"
+                                 referencedColumnNames="id"
+                                 referencedTableName="district"/>
+    </changeSet>
+
+    <changeSet author="kevin.sewell" id="constraint-5">
+        <addForeignKeyConstraint baseColumnNames="country"
+                                 baseTableName="province"
+                                 constraintName="FKEAA4C4D4734E8643"
+                                 referencedColumnNames="id"
+                                 referencedTableName="country"/>
+    </changeSet>
+
+    <changeSet author="kevin.sewell" id="constraint-6">
+        <addForeignKeyConstraint baseColumnNames="province"
+                                 baseTableName="district"
+                                 constraintName="FKEAA4C4D4734E8644"
+                                 referencedColumnNames="id"
+                                 referencedTableName="province"/>
+    </changeSet>
+
+    <changeSet author="kevin.sewell" id="constraint-7">
+        <addForeignKeyConstraint baseColumnNames="district"
+                                 baseTableName="sub_district"
+                                 constraintName="FKEAA4C4D4734E8645"
+                                 referencedColumnNames="id"
+                                 referencedTableName="district"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,1 @@
+INSERT INTO country VALUES (1,'ozb9SZU27Z2','za South Africa (National Government)','South Africa');

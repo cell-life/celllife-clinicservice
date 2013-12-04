@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+                      xmlns:jb="http://www.milyn.org/xsd/smooks/javabean-1.4.xsd"
+                      xmlns:csv="http://www.milyn.org/xsd/smooks/csv-1.5.xsd">
+
+    <csv:reader skipLines="1" fields="code, short_name" rootElementName="clinics" recordElementName="clinic"/>
+
+    <resource-config selector="/root/CqmUssdSubmissionRequest">
+        <resource>org.milyn.delivery.DomModelCreator</resource>
+    </resource-config>
+
+    <!-- Java Beans -->
+
+    <jb:bean beanId="clinics"
+             class="org.celllife.clinicservice.integration.aat.Clinics"
+             createOnElement="clinics">
+
+        <jb:wiring property="clinics" beanIdRef="clinicLists"/>
+    </jb:bean>
+
+    <jb:bean beanId="clinicLists"
+             class="java.util.ArrayList"
+             createOnElement="clinics">
+
+        <jb:wiring beanType="org.celllife.clinicservice.integration.aat.Clinic"/>
+    </jb:bean>
+
+    <jb:bean beanId="clinic"
+             class="org.celllife.clinicservice.integration.aat.Clinic"
+             createOnElement="clinic">
+
+        <jb:value property="code" data="code"/>
+        <jb:value property="shortName" data="short_name"/>
+    </jb:bean>
+
+</smooks-resource-list>
