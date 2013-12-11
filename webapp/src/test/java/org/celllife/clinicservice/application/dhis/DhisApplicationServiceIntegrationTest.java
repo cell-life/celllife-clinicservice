@@ -25,8 +25,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * Date: 2013-03-18
  * Time: 10h34
  */
-
-@Ignore
 @ContextConfiguration(classes = TestConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DhisApplicationServiceIntegrationTest {
@@ -53,6 +51,7 @@ public class DhisApplicationServiceIntegrationTest {
     private ClinicRepository clinicRepository;
 
     @Test
+    @Ignore("Run to synchronize the database")
     public void testSynchroniseAll() throws Exception {
 
         dhisApplicationService.synchroniseAll();
@@ -67,6 +66,7 @@ public class DhisApplicationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testSynchroniseCountries() throws Exception {
 
         dhisApplicationService.synchroniseCountries();
@@ -77,6 +77,7 @@ public class DhisApplicationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testSynchroniseProvinces() throws Exception {
 
         dhisApplicationService.synchroniseProvinces();
@@ -91,6 +92,7 @@ public class DhisApplicationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testSynchroniseDistricts() throws Exception {
 
         dhisApplicationService.synchroniseDistricts();
@@ -101,6 +103,7 @@ public class DhisApplicationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testSynchroniseSubDistricts() throws Exception {
 
         dhisApplicationService.synchroniseSubDistricts();
@@ -111,6 +114,7 @@ public class DhisApplicationServiceIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testSynchroniseClinics() throws Exception {
 
         dhisApplicationService.synchroniseClinics();

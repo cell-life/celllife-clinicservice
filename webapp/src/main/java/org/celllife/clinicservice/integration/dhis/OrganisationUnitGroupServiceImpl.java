@@ -38,7 +38,7 @@ public class OrganisationUnitGroupServiceImpl implements OrganisationUnitGroupSe
 
         for (Map<String, ?> organisationUnitGroup : organisationUnitGroups) {
             if (organisationUnitGroup.get("name").equals(name)) {
-                return (String) organisationUnitGroup.get("link");
+                return (String) organisationUnitGroup.get("href");
             }
         }
 

@@ -9,7 +9,9 @@
 
     <!-- Cell-Life -->
 
-    <logger name="org.celllife" level="WARN" />
+    <logger name="org.celllife" level="TRACE">
+    	<appender-ref ref="STDOUT" />
+    </logger>
 
     <!-- Hibernate -->
 

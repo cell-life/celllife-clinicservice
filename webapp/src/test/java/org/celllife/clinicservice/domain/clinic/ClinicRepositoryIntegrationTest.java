@@ -30,12 +30,7 @@ public class ClinicRepositoryIntegrationTest {
 
     @Test
     public void testFindOneByCode() throws Exception {
-
-    }
-    
-    @Test
-    public void findTotalClinicsByProvinceName() throws Exception {
-    	Long total = clinicRepository.findTotalClinicsByProvinceName("kz KwaZulu-Natal Province");
-    	Assert.assertTrue(1142l == total);
+    	Clinic clinic = clinicRepository.findOneByCode("0001");
+    	Assert.assertEquals("Demo Clinic 2", clinic.getName());
     }
 }

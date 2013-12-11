@@ -1,17 +1,15 @@
 package org.celllife.clinicservice.integration.dhis;
 
+import java.util.List;
+
 import org.celllife.clinicservice.domain.province.Province;
+import org.celllife.clinicservice.test.TestConfiguration;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.List;
 
 /**
  * User: Kevin W. Sewell
@@ -20,7 +18,7 @@ import java.util.List;
  */
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ResourceServiceIntegrationTest.Config.class)
+@ContextConfiguration(classes = TestConfiguration.class) //ProvinceServiceIntegrationTest.Config.class)
 public class ProvinceServiceIntegrationTest {
 
     @Autowired
@@ -43,13 +41,13 @@ public class ProvinceServiceIntegrationTest {
     @Test
     public void testFindOne() throws Exception {
 
-        Province province = dhisProvinceService.findOne("S9Ee1ePYDOS");
+        Province province = dhisProvinceService.findOne("hhdLMd7rMJh");
 
         System.out.println(province);
 
     }
 
-    @Configuration
+    /*@Configuration
     @ImportResource({
             "classpath:/META-INF/spring/spring-cache.xml",
             "classpath:/META-INF/spring/spring-config.xml",
@@ -58,5 +56,5 @@ public class ProvinceServiceIntegrationTest {
     @ComponentScan("org.celllife.clinicservice.integration.dhis")
     public static class Config {
 
-    }
+    }*/
 }

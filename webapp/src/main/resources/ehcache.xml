@@ -285,7 +285,7 @@
         <persistence strategy="localTempSwap"/>
     </defaultCache>
     
-    <cache name="findTotalClinicsByProvinceName" maxElementsInMemory="10000" eternal="true" overflowToDisk="false" />
+    <cache name="organisationUnitGroupLinkByName" maxElementsInMemory="10000" eternal="true" overflowToDisk="false" />
     
     <cache name="resourceLinkByName" maxElementsInMemory="10000" eternal="true" overflowToDisk="false" />
 

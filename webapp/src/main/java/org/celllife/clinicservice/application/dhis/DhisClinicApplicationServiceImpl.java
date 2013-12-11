@@ -9,6 +9,8 @@ import org.celllife.clinicservice.framework.logging.Loggable;
 import org.celllife.clinicservice.integration.aat.AatClinicService;
 import org.celllife.clinicservice.integration.dhis.DhisClinicService;
 import org.dozer.Mapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DhisClinicApplicationServiceImpl implements DhisClinicApplicationService {
+	
+	private static Logger log = LoggerFactory.getLogger(DhisClinicApplicationServiceImpl.class);
 
     @Autowired
     private DhisClinicService dhisClinicService;
@@ -41,6 +45,7 @@ public class DhisClinicApplicationServiceImpl implements DhisClinicApplicationSe
         Clinic dhisClinic = dhisClinicService.findOne(externalId);
 
         if (dhisClinic == null) {
+        	log.warn("Could not find Clinic with externalId '"+externalId+"'");
             return;
         }
 
@@ -55,13 +60,19 @@ public class DhisClinicApplicationServiceImpl implements DhisClinicApplicationSe
 
         // Check if clinic already exists
         Clinic existingClinic = clinicRepository.findByExternalId(externalId);
+        if (existingClinic == null) {
+        	// taking into account that DHIS external ids can change
+        	existingClinic = clinicRepository.findOneByName(dhisClinic.getName());
+        }
 
         if (existingClinic == null) {
-
+        	log.info("Creating a new clinic with externalId '"+dhisClinic.getExternalId()+"' and name '"+dhisClinic.getName()+"'");
             // Save new clinic
             clinicRepository.save(dhisClinic);
         } else {
-
+        	if (log.isDebugEnabled()) {
+        		log.debug("Merging existing clinic with UID '"+existingClinic.getExternalId()+"' with clinic externalId '"+dhisClinic.getExternalId()+"' and name='"+dhisClinic.getName()+"'");
+        	}
             // Merge incoming clinic with existing
             mapper.map(dhisClinic, existingClinic);
             clinicRepository.save(existingClinic);

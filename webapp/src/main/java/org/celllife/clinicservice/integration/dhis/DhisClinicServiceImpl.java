@@ -2,6 +2,8 @@ package org.celllife.clinicservice.integration.dhis;
 
 import org.celllife.clinicservice.domain.clinic.Clinic;
 import org.celllife.clinicservice.domain.subdistrict.SubDistrict;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +19,34 @@ import java.util.Map;
  */
 @Service
 public class DhisClinicServiceImpl implements DhisClinicService {
+	
+	private static Logger log = LoggerFactory.getLogger(DhisClinicServiceImpl.class);
 
     private static final List<String> nonClinicOrganisationalUnitGroupCodes = Arrays.asList(
             "Country",
             "Health District",
             "Health sub-District",
+            "Health Sub-district Office",
             "District Managed Area",
             "Province",
             "Public Admin",
             "Rep Unit",
-            "Training Facility"
+            "Training Facility",
+            "Council Ward",
+            "Ward",
+            "Gov Municipality",
+            "Gov Other",
+            "Gov Province",
+            "Community Health Worker",
+            "Ward Based Outreach Team",
+            "Province Outreach Team",
+            "Municipality Outreach Team",
+            "Health Education Service",
+            "Health Post",
+            "NGO Outreach Team",
+            "Non-medical Site",
+            "Place of Safety",
+            "Public Admin"
     );
 
     @Autowired
@@ -86,7 +106,11 @@ public class DhisClinicServiceImpl implements DhisClinicService {
 
         for (Map<String, ?> organisationUnitGroup : organisationUnitGroups) {
 
-            String organisationUnitGroupCode = (String) organisationUnitGroup.get("code");
+            String organisationUnitGroupCode = (String) organisationUnitGroup.get("name");
+            
+            if (organisationUnitGroupCode == null) {
+            	log.warn("Could not find organisationUnitGroup name from "+organisationUnitGroup);
+            }
 
             if (nonClinicOrganisationalUnitGroupCodes.contains(organisationUnitGroupCode)) {
                 return false;

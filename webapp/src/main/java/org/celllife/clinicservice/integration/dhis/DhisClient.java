@@ -102,10 +102,28 @@ public final class DhisClient {
     }
 
     private HttpResponse execute(HttpGet method)  {
-        try {
-            return dhisHttpClient.execute(method, (HttpContext) null);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    	int counter = 0;
+    	HttpResponse response = null;
+    	try {
+	    	while (counter < 3 && response == null) {
+		        try {
+		        	response = dhisHttpClient.execute(method, (HttpContext) null);
+		        } catch (IOException e) {
+		        	if (counter < 2) {
+		        		throw new RuntimeException(e);
+		        	} else {
+		        		log.info("Error while accessing '"+method.getURI()+"'. Error: "+e.getMessage()+". Waiting 5 seconds before trying again");
+		        		try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e1) { }
+		        	}
+		        } finally {
+		        	counter++;
+		        }
+	    	}
+    	} finally {
+    		dhisHttpClient.getConnectionManager().closeExpiredConnections();
+    	}
+    	return response;
     }
 }

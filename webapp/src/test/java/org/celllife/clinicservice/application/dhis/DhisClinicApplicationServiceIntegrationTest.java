@@ -16,8 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * Date: 2013-03-18
  * Time: 14h15
  */
-
-@Ignore
+@Ignore("Not sure what this test does")
 @ContextConfiguration(classes = TestConfigurationNoAsync.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DhisClinicApplicationServiceIntegrationTest {

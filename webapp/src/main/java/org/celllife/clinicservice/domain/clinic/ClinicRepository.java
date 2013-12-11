@@ -24,6 +24,9 @@ public interface ClinicRepository extends PagingAndSortingRepository<Clinic, Lon
 
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     Clinic findOneByCode(@Param("code") String code);
+    
+    @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
+    Clinic findOneByName(@Param("name") String name);
 
     @Query("select distinct c.code from Clinic c where c.code is not null")
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
@@ -37,8 +40,4 @@ public interface ClinicRepository extends PagingAndSortingRepository<Clinic, Lon
     
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     Iterable<Clinic> findDistinctByGroupsNameIn(String... groupsNames);
-
-    @Cacheable(value = { "findTotalClinicsByProvinceName" })
-    @Query("select count(*) from Clinic c join c.subDistrict.district.province p where p.name = :name")
-    Long findTotalClinicsByProvinceName(@Param("name")String province);
 }
