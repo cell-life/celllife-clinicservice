@@ -16,20 +16,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedService {
-	
+
 	/** only checks clinics in the specified groups */
-	private static final String[] GROUPS_NAMES = new String[] {"Clinic", "Province Facility"};
+	private static final String[] GROUPS_NAMES = new String[] { "Clinic", "Community Day Centre",
+			"Community Health Centre", "District Hospital", "Satellite Clinic", "Province Facility" };
 
 	private static Logger log = LoggerFactory.getLogger(ClinicLocationBasedServiceImpl.class);
-	
+
 	@Autowired
 	ClinicRepository clinicRepository;
 
 	@Override
 	@Loggable(value = LogLevel.INFO, exception = LogLevel.ERROR)
 	public ClinicDTO locateNearestClinic(Double xCoordinate, Double yCoordinate) {
-		// At the moment this just loops through all the clinics. 
-		// In the future, we should first determine which region the specific location falls in and then only search those clinics
+		// At the moment this just loops through all the clinics.
+		// In the future, we should first determine which region the specific
+		// location falls in and then only search those clinics
 		Iterable<Clinic> clinicIterable = clinicRepository.findDistinctByGroupsNameIn(GROUPS_NAMES);
 		Iterator<Clinic> it = clinicIterable.iterator();
 		Double closestDistance = null;
@@ -40,20 +42,24 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 			counter++;
 			try {
 				Coordinate clinicLocation = new Coordinate(clinic.getCoordinates());
-				double distance = getDistance(xCoordinate, yCoordinate, clinicLocation.getXCoordinate(), clinicLocation.getYCoordinate());				
+				double distance = getDistance(xCoordinate, yCoordinate, clinicLocation.getXCoordinate(),
+						clinicLocation.getYCoordinate());
 				if (closestClinic == null || distance < closestDistance) {
 					closestDistance = distance;
 					closestClinic = clinic;
 				}
 			} catch (InvalidCoordinateException e) {
-				log.debug("Ignoring clinic "+clinic.getShortName()+" ("+clinic.getId()+") - "+e.getMessage());
+				log.debug("Ignoring clinic " + clinic.getShortName() + " (" + clinic.getId() + ") - " + e.getMessage());
 			}
 		}
-		log.error("Checked "+counter+" clinics. The nearest clinic is "+closestClinic.getShortName()+" with a distance of "+closestDistance+" groups="+closestClinic.getGroups()+" coordinates="+closestClinic.getCoordinates());
+		log.error("Checked " + counter + " clinics. The nearest clinic is " + closestClinic.getShortName()
+				+ " with a distance of " + closestDistance + " groups=" + closestClinic.getGroups() + " coordinates="
+				+ closestClinic.getCoordinates());
 		return new ClinicDTO(closestClinic);
 	}
 
-	// taken from: https://github.com/janantala/GPS-distance/blob/master/java/Distance.java
+	// taken from:
+	// https://github.com/janantala/GPS-distance/blob/master/java/Distance.java
 	private static double getDistance(double lat1, double lon1, double lat2, double lon2) {
 		double a = 6378137, b = 6356752.314245, f = 1 / 298.257223563;
 		double L = Math.toRadians(lon2 - lon1);
