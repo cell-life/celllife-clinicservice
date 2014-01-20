@@ -88,7 +88,6 @@ public class DhisProvinceServiceImpl implements DhisProvinceService {
 
     private String getOrganisationUnitsUrl() {
 
-    	System.out.println("organisationUnitsUrl="+organisationUnitsUrl);
         if (organisationUnitsUrl == null) {
             organisationUnitsUrl = resourceService.findLinkByName("OrganisationUnits");
         }
