@@ -127,6 +127,8 @@ public class DhisClinicServiceImpl implements DhisClinicService {
         clinic.setName((String) organisationUnit.get("name"));
         clinic.setShortName((String) organisationUnit.get("shortName"));
         clinic.setCoordinates((String) organisationUnit.get("coordinates"));
+        clinic.setPhoneNumber((String) organisationUnit.get("phoneNumber"));
+        clinic.setAddress((String) organisationUnit.get("address"));
 
         // Get Parent Data
 
