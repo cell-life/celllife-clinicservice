@@ -6,7 +6,6 @@ import javax.persistence.QueryHint;
 
 import org.celllife.clinicservice.framework.logging.LogLevel;
 import org.celllife.clinicservice.framework.logging.Loggable;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.PagingAndSortingRepository;
