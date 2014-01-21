@@ -95,6 +95,7 @@ public final class DhisClient {
 
     private String toString(HttpEntity responseEntity)  {
         try {
+            // note: this method handles closing the input stream
             return EntityUtils.toString(responseEntity);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -102,27 +103,16 @@ public final class DhisClient {
     }
 
     private HttpResponse execute(HttpGet method)  {
-    	int counter = 0;
     	HttpResponse response = null;
     	try {
-	    	while (counter < 3 && response == null) {
-		        try {
-		        	response = dhisHttpClient.execute(method, (HttpContext) null);
-		        } catch (IOException e) {
-		        	if (counter < 2) {
-		        		throw new RuntimeException(e);
-		        	} else {
-		        		log.info("Error while accessing '"+method.getURI()+"'. Error: "+e.getMessage()+". Waiting 5 seconds before trying again");
-		        		try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e1) { }
-		        	}
-		        } finally {
-		        	counter++;
-		        }
-	    	}
+	        try {
+	        	response = dhisHttpClient.execute(method, (HttpContext) null);
+	        } catch (IOException e) {
+	        	throw new RuntimeException("Error while accessing '"+method.getURI(),e);
+	        }
     	} finally {
-    		dhisHttpClient.getConnectionManager().closeExpiredConnections();
+    		// not sure but this might cause issues, so I've removed it. Feel free to test yourself :)
+    		//dhisHttpClient.getConnectionManager().closeExpiredConnections();
     	}
     	return response;
     }

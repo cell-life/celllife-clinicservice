@@ -54,6 +54,12 @@ public final class Clinic implements Serializable {
 
     public Clinic() {
     }
+    
+    public void updateCode(String lastCode) {
+    	Integer codeNumber = Integer.parseInt(lastCode);
+    	codeNumber++;
+    	code = codeNumber.toString();
+    }
 
     public Long getId() {
         return id;
@@ -108,7 +114,11 @@ public final class Clinic implements Serializable {
 	}
 
 	public void setAddress(String address) {
-		this.address = address;
+		if (address != null) {
+			this.address = address.trim();
+		} else {
+			this.address = null;
+		}
 	}
 
 	public SubDistrict getSubDistrict() {
@@ -136,12 +146,14 @@ public final class Clinic implements Serializable {
     }
 
     public void addGroup(String name) {
-
+    	addGroup(new Group(name));
+    }
+    
+    public void addGroup(Group group) {
         if (this.groups == null) {
             this.groups = new HashSet<>();
         }
-
-        this.groups.add(new Group(name));
+        this.groups.add(group);    	
     }
 
     @Override
@@ -177,6 +189,9 @@ public final class Clinic implements Serializable {
                 ", name='" + name + '\'' +
                 ", code='" + code + '\'' +
                 ", shortName='" + shortName + '\'' +
+                ", coordinates='" + coordinates + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
                 '}';
     }
 

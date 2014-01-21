@@ -13,12 +13,16 @@
                 <constructor-arg name="schemeRegistry">
                     <bean class="org.apache.http.impl.conn.SchemeRegistryFactory" factory-method="createDefault"/>
                 </constructor-arg>
-                <constructor-arg name="timeToLive" value="60"/>
+                <constructor-arg name="timeToLive" value="240"/>
                 <constructor-arg name="tunit" value="SECONDS"/>
 
                 <property name="maxTotal" value="50"/>
             </bean>
         </constructor-arg>
+        <property name="httpRequestRetryHandler">
+        	<bean class="org.apache.http.impl.client.DefaultHttpRequestRetryHandler">
+        	</bean>
+        </property>
     </bean>
 
     <bean id="dhisAuthenticationHeader" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

@@ -42,4 +42,10 @@
         <sqlFile path="demo-clinic.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+	<changeSet author="dagmar" id="clinic-3">
+        <modifyDataType columnName="phone_number"
+            newDataType="VARCHAR(50)"
+            tableName="clinic"/>
+    </changeSet>
+
 </databaseChangeLog>

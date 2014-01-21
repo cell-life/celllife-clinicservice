@@ -39,4 +39,7 @@ public interface ClinicRepository extends PagingAndSortingRepository<Clinic, Lon
     
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     Iterable<Clinic> findDistinctByGroupsNameIn(String... groupsNames);
+    
+    @Query("select max(c.code) from Clinic c where c.code is not null")
+    String getLastCode();
 }

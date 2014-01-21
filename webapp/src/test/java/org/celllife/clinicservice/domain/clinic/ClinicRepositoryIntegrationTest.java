@@ -33,4 +33,10 @@ public class ClinicRepositoryIntegrationTest {
     	Clinic clinic = clinicRepository.findOneByCode("0001");
     	Assert.assertEquals("Demo Clinic 2", clinic.getName());
     }
+    
+    @Test
+    public void testFindLatestCode() throws Exception {
+    	String lastCode = clinicRepository.getLastCode();
+    	Assert.assertEquals("7140", lastCode);
+    }
 }

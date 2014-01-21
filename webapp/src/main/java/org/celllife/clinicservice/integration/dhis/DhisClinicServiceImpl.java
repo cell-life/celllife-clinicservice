@@ -34,9 +34,7 @@ public class DhisClinicServiceImpl implements DhisClinicService {
             "Training Facility",
             "Council Ward",
             "Ward",
-            "Gov Municipality",
             "Gov Other",
-            "Gov Province",
             "Community Health Worker",
             "Ward Based Outreach Team",
             "Province Outreach Team",
@@ -147,7 +145,10 @@ public class DhisClinicServiceImpl implements DhisClinicService {
                 (List<Map<String, ?>>) organisationUnit.get("organisationUnitGroups");
 
         for (Map<String, ?> organisationUnitGroup : organisationUnitGroups) {
-            clinic.addGroup((String) organisationUnitGroup.get("code"));
+        	String groupName = (String) organisationUnitGroup.get("name");
+        	if (groupName != null && !groupName.trim().equals("")) {
+        		clinic.addGroup(groupName);
+        	}
         }
 
         return clinic;

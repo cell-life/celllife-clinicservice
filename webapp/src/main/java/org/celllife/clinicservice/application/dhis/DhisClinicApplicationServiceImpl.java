@@ -67,8 +67,12 @@ public class DhisClinicApplicationServiceImpl implements DhisClinicApplicationSe
 
         if (existingClinic == null) {
         	log.info("Creating a new clinic with externalId '"+dhisClinic.getExternalId()+"' and name '"+dhisClinic.getName()+"'");
-            // Save new clinic
-            clinicRepository.save(dhisClinic);
+        	// Save new clinic
+        	dhisClinic = clinicRepository.save(dhisClinic);
+        	// now set the code = to the id
+        	String lastCode = clinicRepository.getLastCode();
+        	dhisClinic.updateCode(lastCode);
+        	clinicRepository.save(dhisClinic);
         } else {
         	if (log.isDebugEnabled()) {
         		log.debug("Merging existing clinic with UID '"+existingClinic.getExternalId()+"' with clinic externalId '"+dhisClinic.getExternalId()+"' and name='"+dhisClinic.getName()+"'");
