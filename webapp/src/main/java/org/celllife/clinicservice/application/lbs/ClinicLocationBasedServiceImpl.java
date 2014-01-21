@@ -19,7 +19,7 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 
 	/** only checks clinics in the specified groups */
 	private static final String[] GROUPS_NAMES = new String[] { "Clinic", "Community Day Centre",
-			"Community Health Centre", "District Hospital", "Satellite Clinic", "Province Facility" };
+			"Community Health Centre", "District Hospital", "Satellite Clinic" };
 
 	private static Logger log = LoggerFactory.getLogger(ClinicLocationBasedServiceImpl.class);
 
@@ -49,10 +49,10 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 					closestClinic = clinic;
 				}
 			} catch (InvalidCoordinateException e) {
-				log.debug("Ignoring clinic " + clinic.getShortName() + " (" + clinic.getId() + ") - " + e.getMessage());
+				log.trace("Ignoring clinic " + clinic.getShortName() + " (" + clinic.getId() + ") - " + e.getMessage());
 			}
 		}
-		log.error("Checked " + counter + " clinics. The nearest clinic is " + closestClinic.getShortName()
+		log.info("Checked " + counter + " clinics. The nearest clinic is " + closestClinic.getShortName()
 				+ " with a distance of " + closestDistance + " groups=" + closestClinic.getGroups() + " coordinates="
 				+ closestClinic.getCoordinates());
 		return new ClinicDTO(closestClinic);
