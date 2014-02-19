@@ -2,6 +2,7 @@ package org.celllife.clinicservice.domain.clinic;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class ClinicRepositoryIntegrationTest {
     }
     
     @Test
+    @Ignore("No way to actually run this test reliably")
     public void testFindLatestCode() throws Exception {
     	String lastCode = clinicRepository.getLastCode();
     	Assert.assertEquals("7140", lastCode);

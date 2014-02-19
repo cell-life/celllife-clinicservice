@@ -2,6 +2,7 @@ package org.celllife.clinicservice.application.lbs;
 
 import java.util.Iterator;
 
+import org.celllife.clinicservice.application.geocoding.ReverseGeocodingService;
 import org.celllife.clinicservice.domain.Coordinate;
 import org.celllife.clinicservice.domain.clinic.Clinic;
 import org.celllife.clinicservice.domain.clinic.ClinicDTO;
@@ -20,11 +21,22 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 	/** only checks clinics in the specified groups */
 	private static final String[] GROUPS_NAMES = new String[] { "Clinic", "Community Day Centre",
 			"Community Health Centre", "District Hospital", "Satellite Clinic" };
+	
+	/** indicates an invalid address */
+	private static final String[] INVALID_ADDRESS_PREFIX = new String[] { 
+		"Box", "P.O Box", "P.O. Box", "PO Box", "PO. Box", "P.Bag", "P.B", "P.B.", "PB", "N/A"
+	};
+	private static final String[] INVALID_ADDRESSES = new String[] {
+		"", "Unknown", "None", "No", "No address", "No street address", "No street name"
+	};
 
 	private static Logger log = LoggerFactory.getLogger(ClinicLocationBasedServiceImpl.class);
 
 	@Autowired
 	ClinicRepository clinicRepository;
+	
+	@Autowired
+	ReverseGeocodingService reverseGeocodingService;
 
 	@Override
 	@Loggable(value = LogLevel.INFO, exception = LogLevel.ERROR)
@@ -55,7 +67,38 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 		log.info("Checked " + counter + " clinics. The nearest clinic is " + closestClinic.getShortName()
 				+ " with a distance of " + closestDistance + " groups=" + closestClinic.getGroups() + " coordinates="
 				+ closestClinic.getCoordinates());
-		return new ClinicDTO(closestClinic);
+		
+		ClinicDTO clinicDTO = new ClinicDTO(closestClinic);
+		if (isInvalidAddress(clinicDTO.getAddress())) {
+			String newAddress = reverseGeocodingService.getAddressFromCoordinates(new Coordinate(clinicDTO.getCoordinates()));
+			log.debug("Clinic "+closestClinic.getShortName()+" has an invalid address '"+closestClinic.getAddress()+"'. Using address is '"+newAddress+"' instead.");
+			clinicDTO.setAddress(newAddress);
+		}
+		return clinicDTO;
+	}
+	
+	boolean isInvalidAddress(String currentAddress) {
+		if (currentAddress == null) {
+			return true;
+		} else {
+			if (currentAddress.trim().equals("")) {
+				return true;
+			}
+			if (currentAddress.matches("[0-9]+")) {
+				return true;
+			}
+			for (String prefix : INVALID_ADDRESS_PREFIX) {
+				if (currentAddress.startsWith(prefix)) {
+					return true;
+				}
+			}
+			for (String address : INVALID_ADDRESSES) {
+				if (currentAddress.trim().equals(address)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	// taken from:

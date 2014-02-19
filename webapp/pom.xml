@@ -72,18 +72,16 @@
                 <version>1.5</version>
                 <executions>
                     <execution>
-                        <id>compile</id>
                         <goals>
                             <goal>compile</goal>
-                        </goals>
-                        <phase>compile</phase>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <goals>
+                            <goal>generateStubs</goal>
                             <goal>testCompile</goal>
+                            <goal>generateTestStubs</goal>
                         </goals>
-                        <phase>test-compile</phase>
+                        <configuration>
+                            <providerSelection>${java.version}</providerSelection>
+                            <tolerance>0</tolerance>
+                        </configuration>
                     </execution>
                 </executions>
                 <dependencies>
