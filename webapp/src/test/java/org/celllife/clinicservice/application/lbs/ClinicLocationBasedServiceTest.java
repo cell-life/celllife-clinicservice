@@ -44,4 +44,39 @@ public class ClinicLocationBasedServiceTest {
 		Assert.assertNotNull(clinic);
 		Assert.assertTrue(clinic.getName().contains("Ladybrand"));
 	}
+	
+	@Test
+	public void testSanddrif() throws Exception {
+		ClinicDTO clinic = clinicLocationBasedService.locateNearestClinic(0.0,0.0);
+		Assert.assertNotNull(clinic);
+		Assert.assertTrue(clinic.getName().contains("Sanddrift"));
+		System.out.println("address="+clinic.getAddress());
+	}
+	
+	@Test
+	public void testIsInvalidAddressUnknown() throws Exception {
+		ClinicLocationBasedServiceImpl implService = new ClinicLocationBasedServiceImpl();
+		boolean invalidAddress1 = implService.isInvalidAddress("unknown");
+		Assert.assertTrue("unknown",invalidAddress1);
+		boolean invalidAddress2 = implService.isInvalidAddress("Unknown");
+		Assert.assertTrue("Unknown",invalidAddress2);
+		boolean invalidAddress3 = implService.isInvalidAddress("UNKNOWN");
+		Assert.assertTrue("Unknown",invalidAddress3);
+	}
+
+	@Test
+	public void testIsInvalidAddressEmpty() throws Exception {
+		ClinicLocationBasedServiceImpl implService = new ClinicLocationBasedServiceImpl();
+		boolean invalidAddress1 = implService.isInvalidAddress("");
+		Assert.assertTrue("unknown",invalidAddress1);
+		boolean invalidAddress2 = implService.isInvalidAddress(null);
+		Assert.assertTrue("null",invalidAddress2);
+	}
+	
+	@Test
+	public void testIsInvalidAddressNumber() throws Exception {
+		ClinicLocationBasedServiceImpl implService = new ClinicLocationBasedServiceImpl();
+		boolean invalidAddress1 = implService.isInvalidAddress("1");
+		Assert.assertTrue("1",invalidAddress1);
+	}
 }

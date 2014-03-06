@@ -88,12 +88,12 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 				return true;
 			}
 			for (String prefix : INVALID_ADDRESS_PREFIX) {
-				if (currentAddress.startsWith(prefix)) {
+				if (currentAddress.toUpperCase().startsWith(prefix.toUpperCase())) {
 					return true;
 				}
 			}
 			for (String address : INVALID_ADDRESSES) {
-				if (currentAddress.trim().equals(address)) {
+				if (currentAddress.toUpperCase().trim().equals(address.toUpperCase())) {
 					return true;
 				}
 			}
