@@ -78,5 +78,7 @@ public class ClinicLocationBasedServiceTest {
 		ClinicLocationBasedServiceImpl implService = new ClinicLocationBasedServiceImpl();
 		boolean invalidAddress1 = implService.isInvalidAddress("1");
 		Assert.assertTrue("1",invalidAddress1);
+		boolean invalidAddress2 = implService.isInvalidAddress("021636372");
+		Assert.assertTrue("021636372",invalidAddress2);
 	}
 }
