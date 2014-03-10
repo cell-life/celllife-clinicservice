@@ -8,7 +8,7 @@
 	</appender>
 
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-	    <file>${catalina.base}/logs/clinicservice.log</file>
+	    <file>target/logs/clinicservice.log</file>
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 	      <!-- daily rollover -->
 	      <fileNamePattern>clinicservice.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -23,7 +23,10 @@
 
     <!-- Cell-Life -->
 
-    <logger name="org.celllife" level="WARN"/>
+    <logger name="org.celllife" level="TRACE">
+    	<appender-ref ref="STDOUT" />
+    	<appender-ref ref="FILE" />
+    </logger>
 
     <!-- Hibernate -->
 
@@ -44,6 +47,7 @@
     <!-- Root -->
 
 	<root level="WARN">
+		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</root>
 
