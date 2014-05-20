@@ -34,6 +34,7 @@
     <p>
     <ul>
         <li>Nearest clinic locator: <a href="service/locateNearestClinic?longitude=-33.933782&latitude=18.417606">Example for 123 Hope Street</a></li>
+        <li>Find clinic by code: <a href="service/findClinic?code=0000">Example for Demo clinic</a></li>
     </ul>
     </p>
 
