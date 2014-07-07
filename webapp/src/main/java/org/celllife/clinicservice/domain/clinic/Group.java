@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Time: 20h09
  */
 @Embeddable
-public final class Group implements Serializable {
+public class Group implements Serializable {
 
 	private static final long serialVersionUID = 1903650577807942699L;
 
