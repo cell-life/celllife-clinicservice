@@ -11,7 +11,7 @@
 	    <file>${catalina.base}/logs/clinicservice.log</file>
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 	      <!-- daily rollover -->
-	      <fileNamePattern>clinicservice.%d{yyyy-MM-dd}.log</fileNamePattern>
+	      <fileNamePattern>${catalina.base}/logs/clinicservice.%d{yyyy-MM-dd}.log</fileNamePattern>
 	      <!-- keep 30 days' worth of history -->
 	      <maxHistory>30</maxHistory>
 	    </rollingPolicy>
