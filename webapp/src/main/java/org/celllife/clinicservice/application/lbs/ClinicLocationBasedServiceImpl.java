@@ -1,6 +1,8 @@
 package org.celllife.clinicservice.application.lbs;
 
 import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.celllife.clinicservice.application.geocoding.ReverseGeocodingService;
 import org.celllife.clinicservice.domain.Coordinate;
@@ -38,6 +40,8 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 	@Autowired
 	ReverseGeocodingService reverseGeocodingService;
 
+	private final Map<String, String> simpleAddressCache = new ConcurrentHashMap<String, String>();
+
 	@Override
 	@Loggable(value = LogLevel.INFO, exception = LogLevel.ERROR)
 	public ClinicDTO locateNearestClinic(Double xCoordinate, Double yCoordinate) {
@@ -70,7 +74,14 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 		
 		ClinicDTO clinicDTO = new ClinicDTO(closestClinic);
 		if (isInvalidAddress(clinicDTO.getAddress())) {
-			String newAddress = reverseGeocodingService.getAddressFromCoordinates(new Coordinate(clinicDTO.getCoordinates()));
+		    String newAddress = simpleAddressCache.get(clinicDTO.getCoordinates());
+		    if (newAddress == null || newAddress.trim().isEmpty()) {
+		        log.debug("Using Google reverse geocoding service in order to determine the address at '"+clinicDTO.getCoordinates()+"'.");
+		        newAddress = reverseGeocodingService.getAddressFromCoordinates(new Coordinate(clinicDTO.getCoordinates()));
+		        if (newAddress != null) {
+		            simpleAddressCache.put(clinicDTO.getCoordinates(), newAddress);
+		        }
+		    }
 			log.debug("Clinic "+closestClinic.getShortName()+" has an invalid address '"+closestClinic.getAddress()+"'. Using address is '"+newAddress+"' instead.");
 			clinicDTO.setAddress(newAddress);
 		}

@@ -50,7 +50,11 @@ public class ClinicLocationBasedServiceTest {
 		ClinicDTO clinic = clinicLocationBasedService.locateNearestClinic(0.0,0.0);
 		Assert.assertNotNull(clinic);
 		Assert.assertTrue(clinic.getName().contains("Sanddrift"));
-		System.out.println("address="+clinic.getAddress());
+		Assert.assertEquals("158 Reier Avenue, Sanddrift, South Africa", clinic.getAddress());
+		
+		// this time it should pull from the cache
+		clinic = clinicLocationBasedService.locateNearestClinic(0.0,0.0);
+		Assert.assertEquals("158 Reier Avenue, Sanddrift, South Africa", clinic.getAddress());
 	}
 	
 	@Test
