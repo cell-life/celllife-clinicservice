@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.celllife.clinicservice</groupId>
         <artifactId>celllife-clinicservice-parent</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
     </parent>
 
     <groupId>org.celllife.clinicservice</groupId>
     <artifactId>celllife-clinicservice-webapp</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>${artifactId}</name>
