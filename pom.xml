@@ -5,7 +5,7 @@
 
     <groupId>org.celllife.clinicservice</groupId>
     <artifactId>celllife-clinicservice-parent</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
 
     <name>celllife-clinicservice-parent</name>
