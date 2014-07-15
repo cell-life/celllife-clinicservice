@@ -1,5 +1,8 @@
 package org.celllife.clinicservice.application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.celllife.clinicservice.domain.clinic.Clinic;
 import org.celllife.clinicservice.domain.clinic.ClinicDTO;
 import org.celllife.clinicservice.domain.clinic.ClinicRepository;
@@ -13,7 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClinicServiceImpl implements ClinicService {
 
-	private static Logger log = LoggerFactory.getLogger(ClinicServiceImpl.class);
+	@SuppressWarnings("unused")
+    private static Logger log = LoggerFactory.getLogger(ClinicServiceImpl.class);
 
 	@Autowired
 	ClinicRepository clinicRepository;
@@ -28,4 +32,15 @@ public class ClinicServiceImpl implements ClinicService {
 		}
 		return clinicFound;
 	}
+
+    @Override
+    @Loggable(value = LogLevel.INFO, exception = LogLevel.ERROR)
+    public List<ClinicDTO> findClinicByName(String clinicName) {
+        List<Clinic> clinics = clinicRepository.findByNameContaining(clinicName);
+        List<ClinicDTO> foundClinics = new ArrayList<ClinicDTO>();
+        for (Clinic c : clinics) {
+            foundClinics.add(new ClinicDTO(c));
+        }
+        return foundClinics;
+    }
 }

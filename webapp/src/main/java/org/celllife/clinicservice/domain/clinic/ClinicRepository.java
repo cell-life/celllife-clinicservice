@@ -27,6 +27,9 @@ public interface ClinicRepository extends PagingAndSortingRepository<Clinic, Lon
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     Clinic findOneByName(@Param("name") String name);
 
+    @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
+    List<Clinic> findByNameContaining(@Param("name") String name);
+
     @Query("select distinct c.code from Clinic c where c.code is not null")
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     List<String> findAllCodes();
