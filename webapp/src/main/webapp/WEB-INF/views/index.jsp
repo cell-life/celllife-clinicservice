@@ -31,12 +31,12 @@
 
     <h1>Cell-Life Clinic (REST) Service</h1>
 
-    <p>
     <ul>
         <li>Nearest clinic locator: <a href="service/locateNearestClinic?longitude=-33.933782&latitude=18.417606">Example for 123 Hope Street</a></li>
-        <li>Find clinic by code: <a href="service/findClinic?code=0000">Example for Demo clinic</a></li>
+        <li>Nearest clinic locator, specifying groups: <a href="service/locateNearestClinicWithGroups?longitude=-33.933782&latitude=18.417606&includeGroups=Clinic%2CCommunity%20Day%20Centre%2CCommunity%20Health%20Centre%2CDistrict%20Hospital%2CSatellite%20Clinic&excludeGroups=For-profit%20Facility">Example for 123 Hope Street</a></li>
+        <li>Find clinic by code: <a href="service/searchClinic?code=0000">Example for Demo clinic</a></li>
+        <li>Find clinic by name: <a href="service/searchClinicByName?name=demo">Example for Demo clinic</a></li>
     </ul>
-    </p>
 
     <hr>
 

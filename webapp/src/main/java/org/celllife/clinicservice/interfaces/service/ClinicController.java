@@ -1,5 +1,7 @@
 package org.celllife.clinicservice.interfaces.service;
 
+import java.util.List;
+
 import org.celllife.clinicservice.application.ClinicService;
 import org.celllife.clinicservice.application.lbs.ClinicLocationBasedService;
 import org.celllife.clinicservice.domain.clinic.ClinicDTO;
@@ -25,23 +27,34 @@ public class ClinicController {
 	ClinicService clinicService;
 
 	@ResponseBody
-	@RequestMapping(
-		value = "/service/locateNearestClinic", 
-		method = RequestMethod.GET, 
-		produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/service/locateNearestClinic", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ClinicDTO locateNearestClinic(
 			@RequestParam("longitude") Double longitude,
 			@RequestParam("latitude") Double latitude) {
 		return clinicLocationBasedService.locateNearestClinic(longitude, latitude);
 	}
+
+    @ResponseBody
+    @RequestMapping(value = "/service/locateNearestClinicWithGroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ClinicDTO locateNearestClinic(
+            @RequestParam("longitude") Double longitude,
+            @RequestParam("latitude") Double latitude, 
+            @RequestParam("includeGroups") String includeGroups,
+            @RequestParam("excludeGroups") String excludeGroups) {
+        String[] inGroups = includeGroups.split(",");
+        String[] exGroups = excludeGroups.split(",");
+        return clinicLocationBasedService.locateNearestClinic(longitude, latitude, inGroups, exGroups);
+    }
 	
 	@ResponseBody
-	@RequestMapping(
-		value = "/service/findClinic", 
-		method = RequestMethod.GET, 
-		produces = MediaType.APPLICATION_JSON_VALUE)
-	public ClinicDTO findClinic(
-			@RequestParam("code") String code) {
+	@RequestMapping(value = "/service/searchClinic", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ClinicDTO findClinic(@RequestParam("code") String code) {
 		return clinicService.findClinic(code);
 	}
+
+    @ResponseBody
+    @RequestMapping(value = "/service/searchClinicByName", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ClinicDTO> searchClinic(@RequestParam("name") String name) {
+        return clinicService.findClinicByName(name);
+    }
 }

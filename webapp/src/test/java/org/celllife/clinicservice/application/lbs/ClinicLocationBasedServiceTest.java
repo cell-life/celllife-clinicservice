@@ -85,4 +85,12 @@ public class ClinicLocationBasedServiceTest {
 		boolean invalidAddress2 = implService.isInvalidAddress("021636372");
 		Assert.assertTrue("021636372",invalidAddress2);
 	}
+
+	@Test
+	public void testNoForProfitFacility() throws Exception {
+	    ClinicDTO clinic = clinicLocationBasedService.locateNearestClinic(-33.986793,18.4780121);
+        Assert.assertNotNull(clinic);
+        System.out.println(clinic.getName());
+        Assert.assertFalse(clinic.getName().contains("Kenilworth Medicross Private Clinic"));
+	}
 }

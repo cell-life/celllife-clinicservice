@@ -9,6 +9,7 @@ import org.celllife.clinicservice.domain.Coordinate;
 import org.celllife.clinicservice.domain.clinic.Clinic;
 import org.celllife.clinicservice.domain.clinic.ClinicDTO;
 import org.celllife.clinicservice.domain.clinic.ClinicRepository;
+import org.celllife.clinicservice.domain.clinic.Group;
 import org.celllife.clinicservice.domain.exception.InvalidCoordinateException;
 import org.celllife.clinicservice.framework.logging.LogLevel;
 import org.celllife.clinicservice.framework.logging.Loggable;
@@ -23,6 +24,8 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 	/** only checks clinics in the specified groups */
 	private static final String[] GROUPS_NAMES = new String[] { "Clinic", "Community Day Centre",
 			"Community Health Centre", "District Hospital", "Satellite Clinic" };
+	
+	private static final String[] GROUPS_NAMES_EXCLUDE = new String[] { "For-profit Facility" };
 	
 	/** indicates an invalid address */
 	private static final String[] INVALID_ADDRESS_PREFIX = new String[] { 
@@ -45,47 +48,67 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 	@Override
 	@Loggable(value = LogLevel.INFO, exception = LogLevel.ERROR)
 	public ClinicDTO locateNearestClinic(Double xCoordinate, Double yCoordinate) {
-		// At the moment this just loops through all the clinics.
-		// In the future, we should first determine which region the specific
-		// location falls in and then only search those clinics
-		Iterable<Clinic> clinicIterable = clinicRepository.findDistinctByGroupsNameIn(GROUPS_NAMES);
-		Iterator<Clinic> it = clinicIterable.iterator();
-		Double closestDistance = null;
-		Clinic closestClinic = null;
-		int counter = 0;
-		while (it.hasNext()) {
-			Clinic clinic = it.next();
-			counter++;
-			try {
-				Coordinate clinicLocation = new Coordinate(clinic.getCoordinates());
-				double distance = getDistance(xCoordinate, yCoordinate, clinicLocation.getXCoordinate(),
-						clinicLocation.getYCoordinate());
-				if (closestClinic == null || distance < closestDistance) {
-					closestDistance = distance;
-					closestClinic = clinic;
-				}
-			} catch (InvalidCoordinateException e) {
-				log.trace("Ignoring clinic " + clinic.getShortName() + " (" + clinic.getId() + ") - " + e.getMessage());
-			}
-		}
-		log.info("Checked " + counter + " clinics. The nearest clinic is " + closestClinic.getShortName()
-				+ " with a distance of " + closestDistance + " groups=" + closestClinic.getGroups() + " coordinates="
-				+ closestClinic.getCoordinates());
-		
-		ClinicDTO clinicDTO = new ClinicDTO(closestClinic);
-		if (isInvalidAddress(clinicDTO.getAddress())) {
-		    String newAddress = simpleAddressCache.get(clinicDTO.getCoordinates());
-		    if (newAddress == null || newAddress.trim().isEmpty()) {
-		        log.debug("Using Google reverse geocoding service in order to determine the address at '"+clinicDTO.getCoordinates()+"'.");
-		        newAddress = reverseGeocodingService.getAddressFromCoordinates(new Coordinate(clinicDTO.getCoordinates()));
-		        if (newAddress != null) {
-		            simpleAddressCache.put(clinicDTO.getCoordinates(), newAddress);
-		        }
-		    }
-			log.debug("Clinic "+closestClinic.getShortName()+" has an invalid address '"+closestClinic.getAddress()+"'. Using address is '"+newAddress+"' instead.");
-			clinicDTO.setAddress(newAddress);
-		}
-		return clinicDTO;
+	    return locateNearestClinic(xCoordinate, yCoordinate, GROUPS_NAMES, GROUPS_NAMES_EXCLUDE);
+	}
+	
+	@Override
+	@Loggable(value = LogLevel.INFO, exception = LogLevel.ERROR)
+	public ClinicDTO locateNearestClinic(Double xCoordinate, Double yCoordinate, String[] includeGroups, String[] excludeGroups) {
+        // At the moment this just loops through all the clinics.
+        // In the future, we should first determine which region the specific
+        // location falls in and then only search those clinics
+        Iterable<Clinic> clinicIterable = clinicRepository.findDistinctByGroupsNameIn(includeGroups);
+        Iterator<Clinic> it = clinicIterable.iterator();
+        Double closestDistance = null;
+        Clinic closestClinic = null;
+        int counter = 0;
+        while (it.hasNext()) {
+            Clinic clinic = it.next();
+            if (exclude(clinic, excludeGroups)) {
+                continue;
+            }
+            counter++;
+            try {
+                Coordinate clinicLocation = new Coordinate(clinic.getCoordinates());
+                double distance = getDistance(xCoordinate, yCoordinate, clinicLocation.getXCoordinate(),
+                        clinicLocation.getYCoordinate());
+                if (closestClinic == null || distance < closestDistance) {
+                    closestDistance = distance;
+                    closestClinic = clinic;
+                }
+            } catch (InvalidCoordinateException e) {
+                log.trace("Ignoring clinic " + clinic.getShortName() + " (" + clinic.getId() + ") - " + e.getMessage());
+            }
+        }
+        log.info("Checked " + counter + " clinics. The nearest clinic is " + closestClinic.getShortName()
+                + " with a distance of " + closestDistance + " groups=" + closestClinic.getGroups() + " coordinates="
+                + closestClinic.getCoordinates());
+        
+        ClinicDTO clinicDTO = new ClinicDTO(closestClinic);
+        if (isInvalidAddress(clinicDTO.getAddress())) {
+            String newAddress = simpleAddressCache.get(clinicDTO.getCoordinates());
+            if (newAddress == null || newAddress.trim().isEmpty()) {
+                log.debug("Using Google reverse geocoding service in order to determine the address at '"+clinicDTO.getCoordinates()+"'.");
+                newAddress = reverseGeocodingService.getAddressFromCoordinates(new Coordinate(clinicDTO.getCoordinates()));
+                if (newAddress != null) {
+                    simpleAddressCache.put(clinicDTO.getCoordinates(), newAddress);
+                }
+            }
+            log.debug("Clinic "+closestClinic.getShortName()+" has an invalid address '"+closestClinic.getAddress()+"'. Using address is '"+newAddress+"' instead.");
+            clinicDTO.setAddress(newAddress);
+        }
+        return clinicDTO;
+	}
+	
+	boolean exclude(Clinic clinic, String[] excludeGroups) {
+	    for (Group group : clinic.getGroups()) {
+	        for (String groupName : excludeGroups) {
+	            if (group.getName().equals(groupName)) {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
 	}
 	
 	boolean isInvalidAddress(String currentAddress) {
