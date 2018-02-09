@@ -1,10 +1,12 @@
 package org.celllife.clinicservice.application.lbs;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.celllife.clinicservice.application.geocoding.ReverseGeocodingService;
+//import org.celllife.clinicservice.application.geocoding.ReverseGeocodingService;
 import org.celllife.clinicservice.domain.Coordinate;
 import org.celllife.clinicservice.domain.clinic.Clinic;
 import org.celllife.clinicservice.domain.clinic.ClinicDTO;
@@ -40,10 +42,58 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
 	@Autowired
 	ClinicRepository clinicRepository;
 	
-	@Autowired
-	ReverseGeocodingService reverseGeocodingService;
+	//@Autowired
+	//ReverseGeocodingService reverseGeocodingService;
 
 	private final Map<String, String> simpleAddressCache = new ConcurrentHashMap<String, String>();
+	
+	@Override
+	public List<ClinicDTO> locateNearestClinics(Double xCoordinate, Double yCoordinate, String[] includeGroups, String[] excludeGroups, Double radiusMeters) {
+	    List<ClinicDTO> clinics = new ArrayList<ClinicDTO>();
+	    
+        Iterable<Clinic> clinicIterable = clinicRepository.findDistinctByGroupsNameIn(includeGroups);
+        Iterator<Clinic> it = clinicIterable.iterator();
+        List<Clinic> closestClinics = new ArrayList<Clinic>();
+
+        int counter = 0;
+        while (it.hasNext()) {
+            Clinic clinic = it.next();
+            if (exclude(clinic, excludeGroups)) {
+                continue;
+            }
+            counter++;
+            try {
+                Coordinate clinicLocation = new Coordinate(clinic.getCoordinates());
+                double distance = getDistance(xCoordinate, yCoordinate, clinicLocation.getXCoordinate(),
+                        clinicLocation.getYCoordinate());
+                if (distance <= radiusMeters) {
+                    closestClinics.add(clinic);
+                }
+            } catch (InvalidCoordinateException e) {
+                log.trace("Ignoring clinic " + clinic.getShortName() + " (" + clinic.getId() + ") - " + e.getMessage());
+            }
+        }
+        log.info("Checked " + counter + " clinics. There are "+closestClinics.size()+" clinics within " + radiusMeters);
+        
+        for (Clinic clinic : closestClinics) {
+            ClinicDTO clinicDTO = new ClinicDTO(clinic);
+            /*if (isInvalidAddress(clinicDTO.getAddress())) {
+                String newAddress = simpleAddressCache.get(clinicDTO.getCoordinates());
+                if (newAddress == null || newAddress.trim().isEmpty()) {
+                    log.debug("Using Google reverse geocoding service in order to determine the address at '"+clinicDTO.getCoordinates()+"'.");
+                    newAddress = reverseGeocodingService.getAddressFromCoordinates(new Coordinate(clinicDTO.getCoordinates()));
+                    if (newAddress != null) {
+                        simpleAddressCache.put(clinicDTO.getCoordinates(), newAddress);
+                    }
+                }
+                log.debug("Clinic "+clinic.getShortName()+" has an invalid address '"+clinic.getAddress()+"'. Using address is '"+newAddress+"' instead.");
+                clinicDTO.setAddress(newAddress);
+            }*/
+            clinics.add(clinicDTO);
+        }
+
+	    return clinics;
+	}
 
 	@Override
 	@Loggable(value = LogLevel.INFO, exception = LogLevel.ERROR)
@@ -85,7 +135,7 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
                 + closestClinic.getCoordinates());
         
         ClinicDTO clinicDTO = new ClinicDTO(closestClinic);
-        if (isInvalidAddress(clinicDTO.getAddress())) {
+        /*if (isInvalidAddress(clinicDTO.getAddress())) {
             String newAddress = simpleAddressCache.get(clinicDTO.getCoordinates());
             if (newAddress == null || newAddress.trim().isEmpty()) {
                 log.debug("Using Google reverse geocoding service in order to determine the address at '"+clinicDTO.getCoordinates()+"'.");
@@ -96,7 +146,7 @@ public class ClinicLocationBasedServiceImpl implements ClinicLocationBasedServic
             }
             log.debug("Clinic "+closestClinic.getShortName()+" has an invalid address '"+closestClinic.getAddress()+"'. Using address is '"+newAddress+"' instead.");
             clinicDTO.setAddress(newAddress);
-        }
+        }*/
         return clinicDTO;
 	}
 	

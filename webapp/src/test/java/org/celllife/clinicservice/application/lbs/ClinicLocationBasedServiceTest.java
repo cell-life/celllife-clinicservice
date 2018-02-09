@@ -1,5 +1,7 @@
 package org.celllife.clinicservice.application.lbs;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.celllife.clinicservice.domain.clinic.ClinicDTO;
@@ -16,6 +18,32 @@ public class ClinicLocationBasedServiceTest {
 
 	@Autowired
 	private ClinicLocationBasedService clinicLocationBasedService;
+	
+	@Test
+	public void testMasiphumelele() throws Exception {
+	    String[] includeGroups = new String[] { "Clinic", "Community Day Centre",
+	            "Community Health Centre", "District Hospital", "Satellite Clinic", 
+	            "Province Facility", "Rural", "Mobile Service", "Urban", "Province Aided Facility", "Frail Care", 
+	            "ART Accred Site", "Peri-Urban", "Crisis Centre", "For-profit Facility", "Private Hospital", "Community Health Centre",
+	            "Non-medical Site", "Specialised Hospital", "Correctional Service", "Other dept Facility", "Not-for-profit Facility",
+	            "Faith-Based Facility", "Provincial Tertiary Hospital", "Pharmacy", "Occupational Health Clinic", "Health Post",
+	            "General Practitioner", "Specialised Psychiatric Hospital", "Municipality Facility", "NGO Facility", "Specialised TB Hospital",
+	            "Regional Hospital", "Industry Clinic", "Psychiatry Service", "School Health Service", "Special Clinic", "Occupational Health Service",
+	            "National Central Hospital", "Nurse Practitioner", "Medical Centre", "Midwife Obstetrics Unit", "Community Day Centre",
+	            "HIV/AIDS Support Centre", "Surgical Centre", "VCT Clinic", "Support Centre", "Home Based Care", "Hospital",
+	            "Reproductive Service", "Place of Safety", "Rehabilitation Service", "Psychiatry Home", "Specialised Chronic Hospital",
+	            "Step Down Facility", "Hospice", "Gateway Clinic", "EMS Station", "Province EMS", "Oral Health Service", "Health Education Service",
+	            "Ward", "Gov Province", "Tier 1", "Not an ART Site", "For-profit", "Mental Health Service", "Not-for-profit",
+	            "Occupational Health Centre", "Priority Facility", "Large District Hospital", "Small District Hospital",
+	            "Oral Health Centre", "Medium District Hospital", "Private Clinic", "Gov Municipality", "Placeholder", "Specialised Hospital (Gaz)",
+	            "Province Aided", "Provincial Tertiary Hospital (Gaz)", "Specialised TB Hospital (Gaz)", "STI Sentinel Site",
+	            "Regional Hospital (Gaz)", "Forensic Pathology", "VCT", "Correctional Centre", "Environmental Health Service",
+	            "Community Health Centre / Clinic", "Community Health Centre (After hours)", "Specialist", "Central Hospital"};
+	    List<ClinicDTO> clinics = clinicLocationBasedService.locateNearestClinics(-34.1291,18.3784, includeGroups, new String[] {}, 10000.00);
+	    for (ClinicDTO clinic : clinics) {
+	        System.out.println("Found "+clinic.getName()+" ("+clinic.getShortName()+") phone="+clinic.getPhoneNumber()+" address="+clinic.getAddress()+" gps="+clinic.getCoordinates());
+	    }
+	}
 	
 	@Test
 	public void test123HopeStreet() throws Exception {

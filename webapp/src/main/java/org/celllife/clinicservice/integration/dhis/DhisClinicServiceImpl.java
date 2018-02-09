@@ -111,6 +111,7 @@ public class DhisClinicServiceImpl implements DhisClinicService {
             }
 
             if (nonClinicOrganisationalUnitGroupCodes.contains(organisationUnitGroupCode)) {
+                log.warn("Entity belongs to a non-clinic organisational unit "+clinicMap.get("name"));
                 return false;
             }
         }

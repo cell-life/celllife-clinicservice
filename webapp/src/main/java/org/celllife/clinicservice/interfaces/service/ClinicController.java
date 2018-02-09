@@ -45,6 +45,19 @@ public class ClinicController {
         String[] exGroups = excludeGroups.split(",");
         return clinicLocationBasedService.locateNearestClinic(longitude, latitude, inGroups, exGroups);
     }
+    
+    @ResponseBody
+    @RequestMapping(value = "/service/locateNearestClinicsWithGroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ClinicDTO> locateNearestClinics(
+            @RequestParam("longitude") Double longitude,
+            @RequestParam("latitude") Double latitude, 
+            @RequestParam("includeGroups") String includeGroups,
+            @RequestParam("excludeGroups") String excludeGroups,
+            @RequestParam("radiusMeters") Double radiusMeters) {
+        String[] inGroups = includeGroups.split(",");
+        String[] exGroups = excludeGroups.split(",");
+        return clinicLocationBasedService.locateNearestClinics(longitude, latitude, inGroups, exGroups, radiusMeters);
+    }
 	
 	@ResponseBody
 	@RequestMapping(value = "/service/searchClinic", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

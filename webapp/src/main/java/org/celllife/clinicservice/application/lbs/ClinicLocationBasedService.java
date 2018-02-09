@@ -1,5 +1,7 @@
 package org.celllife.clinicservice.application.lbs;
 
+import java.util.List;
+
 import org.celllife.clinicservice.domain.clinic.ClinicDTO;
 
 /**
@@ -28,4 +30,16 @@ public interface ClinicLocationBasedService {
 	 * @return
 	 */
 	ClinicDTO locateNearestClinic(Double xCoordinate, Double yCoordinate, String[] includeGroups, String[] excludeGroups);
+	
+	/**
+	 * Finds the clinics within the specified radius
+	 * 
+     * @param xCoordinate Double longitude
+     * @param yCoordinate Double latitude
+     * @param includeGroups String[] containing the request type of facilities to include in the search
+     * @param excludeGroups String[] containing the types of facilities to exclude in the search
+	 * @param radiusMeters Double distance in meters in which to return clinics
+	 * @return
+	 */
+	List<ClinicDTO> locateNearestClinics(Double xCoordinate, Double yCoordinate, String[] includeGroups, String[] excludeGroups, Double radiusMeters);
 }
